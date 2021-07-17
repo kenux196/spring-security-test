@@ -3,3 +3,6 @@ spring:
     user:
       name: user
       password: 1111
+logging:
+  level:
+    org.kenux.security.config: debug
