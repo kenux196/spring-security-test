@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import sun.security.util.ManifestDigester;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +32,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        
+        // 인가 설정
         http
                 .authorizeRequests()
                 .anyRequest().authenticated();
+        
+        // 로그인(인증) 설정
         http
                 .formLogin()
 //                .loginPage("/loginPage") // 누구나 접근 가능해야 하는 페이지 / 인증없이 접근 가능해야 함.
@@ -58,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .permitAll(); // 위 경로들은 모두 접근 가능
 
+        // 로그 아웃 설정
         http
                 .logout()
                 .logoutUrl("/logout")
@@ -78,11 +84,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .deleteCookies("remember-me"); // 쿠키 삭제
-        http
-                .rememberMe()
-                .rememberMeParameter("remember") // 기본 파라미터명은 remember-me
-                .tokenValiditySeconds(3600) // 쿠키 만료 시간 설정
-                .alwaysRemember(false) // 기본값으로 false 할 것.
-                .userDetailsService(userDetailsService);
+
+        // remember-me 쿠키 설정
+//        http
+//                .rememberMe()
+//                .rememberMeParameter("remember") // 기본 파라미터명은 remember-me
+//                .tokenValiditySeconds(3600) // 쿠키 만료 시간 설정
+//                .alwaysRemember(false) // 기본값으로 false 할 것.
+//                .userDetailsService(userDetailsService);
+
+        //  동시 세션 제어 전략 설정
+       http
+               .sessionManagement() // 세션 관리 기능
+               .maximumSessions(1) // 최대 동시 세션 허용 갯수
+               .maxSessionsPreventsLogin(true) // 동시 로그인 전략 설정 true: 신규 세션 차단 전략, false(default): 기존 세션 만료 전략
+               .expiredUrl("/expired")
+               .and()
+               .invalidSessionUrl("/invalid");
+
+       // 세션 고정 보호
+       http
+               .sessionManagement()
+               .sessionFixation().changeSessionId();
     }
 }
