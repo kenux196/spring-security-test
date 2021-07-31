@@ -1,8 +1,27 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/core_security_study
+    username: study
+    password: study
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+#        show_sql:true
+        format_sql: true
+
   security:
     user:
       name: user
       password: 1111
+
+  thymeleaf:
+    cache: false
+
 logging:
   level:
+    org.hibernate.SQL: debug
     org.kenux.security.config: debug
