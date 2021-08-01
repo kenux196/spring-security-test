@@ -22,7 +22,7 @@ public class Resources implements Serializable {
     private Long id;
 
     @Column(name = "resource_name")
-    private String resourcesName;
+    private String resourceName;
 
     @Column(name = "http_method")
     private String httpMethod;

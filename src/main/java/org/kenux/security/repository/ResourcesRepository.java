@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ResourcesRepository extends JpaRepository<Resources, Long> {
 
-    Resources findByResourcesNameAndHttpMethod(String resourceName, String httpMethod);
+    Resources findByResourceNameAndHttpMethod(String resourceName, String httpMethod);
 
     @Query("select r from Resources r " +
             "join fetch r.roleSet " +
